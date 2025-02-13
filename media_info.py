@@ -11,7 +11,8 @@ def get_video_info(file_path, bin_path):
             [os.path.join(bin_path, 'ffprobe'), '-v', 'error', '-print_format', 'json', '-show_format', '-show_streams', file_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True
+            text=True,
+            encoding='utf-8'
         )
         return json.loads(result.stdout)
     except Exception as e:
@@ -19,29 +20,31 @@ def get_video_info(file_path, bin_path):
         return None
 
 def list_files_and_folders(path, bin_path):
-    file_list = []
-    for root, dirs, files in os.walk(path):
-        for name in files:
-            file_path = os.path.join(root, name)
-            if name.lower().endswith(('.mp4', '.mkv', '.avi', '.mov', '.wmv', '.mpg', '.mpeg')):
-                video_info = get_video_info(file_path, bin_path)
-                file_list.append({
-                    'path': file_path,
-                    'type': 'video',
-                    'info': video_info
+    def recursive_list(path):
+        items = []
+        for entry in os.scandir(path):
+            if entry.is_dir():
+                items.append({
+                    'path': entry.path,
+                    'type': 'directory',
+                    'contents': recursive_list(entry.path)
                 })
             else:
-                file_list.append({
-                    'path': file_path,
-                    'type': 'file'
-                })
-        for name in dirs:
-            dir_path = os.path.join(root, name)
-            file_list.append({
-                'path': dir_path,
-                'type': 'directory'
-            })
-    return file_list
+                if entry.name.lower().endswith(('.mp4', '.mkv', '.avi', '.mov', '.wmv', '.mpg', '.mpeg')):
+                    video_info = get_video_info(entry.path, bin_path)
+                    items.append({
+                        'path': entry.path,
+                        'type': 'video',
+                        'info': video_info
+                    })
+                else:
+                    items.append({
+                        'path': entry.path,
+                        'type': 'file'
+                    })
+        return items
+
+    return recursive_list(path)
 
 def download_and_extract_ffmpeg():
     url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
@@ -82,7 +85,7 @@ def get_ffmpeg_path():
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python media_info.py <path>")
+        print("Usage: python media_info.py <path1>,<path2>,...,<pathn>")
         sys.exit(1)
 
     bin_path = ''
@@ -97,14 +100,18 @@ if __name__ == "__main__":
     else:
         print("FFmpeg is installed.")
     
-    path = sys.argv[1]
-    if not os.path.exists(path):
-        print(f"The path {path} does not exist.")
-        sys.exit(1)
-    
-    result = list_files_and_folders(path, bin_path)
+    paths = sys.argv[1].split(',')
+    all_results = []
+
+    for path in paths:
+        if not os.path.exists(path):
+            print(f"The path {path} does not exist.")
+            continue
+        
+        result = list_files_and_folders(path, bin_path)
+        all_results.extend(result)
     
     with open('media_info.json', 'w', encoding='utf-8') as f:
-        json.dump(result, f, ensure_ascii=False, indent=4)
+        json.dump(all_results, f, ensure_ascii=False, indent=4)
     
     print("Results saved to media_info.json")

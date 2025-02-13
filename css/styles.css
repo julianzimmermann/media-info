@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.filters {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filters label {
+    margin-right: 5px;
+}
+
+.filters select, .filters input {
+    margin-right: 10px;
+}
+
+.media-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.media-item:last-child {
+    border-bottom: none;
+}
+
+.media-item h2 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #333;
+    cursor: pointer;
+}
+
+.media-item p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.media-item .details {
+    display: none;
+    margin-left: 20px;
+}
+
+.media-item .details p {
+    margin: 2px 0;
+}

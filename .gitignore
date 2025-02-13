@@ -1,6 +1,17 @@
 # Ignore everything
 *
 
-# Except .py files
+# Except .py, .html, .md files
 !.gitignore
 !*.py
+!*.html
+!*.md
+
+# Include directories
+!/
+
+# Include specific directories and their contents
+!/css/
+!/css/*.css
+!/js/
+!/js/*.js

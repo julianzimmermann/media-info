@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Info Viewer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Media Info Viewer</h1>
+        <div class="filters">
+            <label for="videoCodec">Video Codec:</label>
+            <select id="videoCodec">
+                <option value="">All</option>
+            </select>
+            <label for="audioCodec">Audio Codec:</label>
+            <select id="audioCodec">
+                <option value="">All</option>
+            </select>
+            <label for="audioChannels">Audio Channels:</label>
+            <select id="audioChannels">
+                <option value="">All</option>
+            </select>
+            <label for="videoResolution">Video Resolution:</label>
+            <select id="videoResolution">
+                <option value="">All</option>
+            </select>
+            <button id="applyFilters">Apply Filters</button>
+        </div>
+        <div id="content"></div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
